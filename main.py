@@ -5,7 +5,7 @@ windowHeight = 600
 pygame.init()
 gameDisplay = pygame.display.set_mode((windowWidth, windowHeight))
 clock = pygame.time.Clock()
-pygame.display.set_caption("HelpDesk Game - No step on Snek")
+pygame.display.set_caption("No step on Snek")
 pygame.display.update()
 
 
@@ -19,7 +19,7 @@ def afterGameScreen():
     gameExit = False
     font = pygame.font.SysFont(None, 50)
     game_over = font.render("Game Over", True, black)
-    
+
     while not gameExit:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN or event.type == pygame.QUIT:
