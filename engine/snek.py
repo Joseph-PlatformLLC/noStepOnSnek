@@ -14,6 +14,64 @@ class Snek():
         self.window = components.Window()
         self.directionX = True
 
+    def eventHandler(self, event):
+        code = 'none'
+        if event.key == pygame.K_LEFT:
+            self.speed.x = -self.velocity
+            self.directionX = True
+
+        elif event.key == pygame.K_RIGHT:
+            self.speed.x = self.velocity
+            self.directionX = True
+
+        elif event.key == pygame.K_DOWN:
+            self.speed.y = self.velocity
+            self.directionX = False
+
+        elif event.key == pygame.K_UP:
+            self.speed.y = -self.velocity
+            self.directionX = False
+
+    # def grow(self):
+    #     x = self.body
+    #     if x:
+    #         dx = x[len(x) - 1].x
+    #         dy = x[len(x) - 1].y
+    #         self.body.append(components.Dot(dx, dy, self.color))
+    #     else:
+    #         self.body.append(components.Dot(self.head.x, self.head.y, self.color))
+
+    def render(self):
+        r = [self.head]
+        if self.body:
+            for dot in self.body:
+                r.append(dot)
+
+        return r
+
+    def collisionCheck(self, food):
+        f = False
+        for x in food:
+            if (x.x == self.head.x) and (x.y == self.head.y):
+                f = True
+                break
+
+        return f
+
+    def bodyFollow(self, oldHead, grow=False):
+        flag = True
+        for dot in self.body:
+            print dot.x, dot.y, dot.color
+        if self.body:
+            self.body.insert(0, components.Dot(oldHead.x, oldHead.y, oldHead.color))
+            if not grow:
+                x = self.body.pop()
+                print x
+
+        else:
+            if grow:
+                self.body.append(components.Dot(oldHead.x, oldHead.y, oldHead.color))
+
     def update(self, code, food):
         if code == 'n':
             c = self.collisionCheck(food)
@@ -35,76 +93,3 @@ class Snek():
 
         if code == 'none':
             print('Unassigned Key')
-
-    def eventHandler(self, event):
-        code = 'none'
-        if event.key == pygame.K_LEFT:
-            self.speed.x = -self.velocity
-            self.directionX = True
-
-        elif event.key == pygame.K_RIGHT:
-            self.speed.x = self.velocity
-            self.directionX = True
-
-        elif event.key == pygame.K_DOWN:
-            self.speed.y = self.velocity
-            self.directionX = False
-
-        elif event.key == pygame.K_UP:
-            self.speed.y = -self.velocity
-            self.directionX = False
-
-    def grow(self):
-        x = self.body
-        if x:
-            dx = x[len(x) - 1].x
-            dy = x[len(x) - 1].y
-            self.body.append(components.Dot(dx, dy, self.color))
-
-    def render(self):
-        r = [self.head]
-        if self.body:
-            for dot in self.body:
-                r.append(dot)
-
-        return r
-
-    def collisionCheck(self, food):
-        f = False
-        for x in food:
-            if (x.x == self.head.x) and (x.y == self.head.y):
-                self.grow()
-                f = True
-                break
-
-        return f
-
-    def bodyFollow(self, oldHead, grow=False):
-        flag = True
-        temp1 = None
-        temp2 = None
-
-        if self.body:
-            temp3 = self.body[len(self.body) - 1]
-            for d in self.body:
-
-                if flag:
-                    temp1 = d
-                    d.x = oldHead.x
-                    d.y = oldHead.y
-                    flag = False
-
-                else:
-                    temp1 = d
-                    d.x = temp2.x
-                    d.y = temp2.y
-
-                temp2 = temp1
-
-            if grow:
-                self.body[len(self.body)-1] = temp3
-
-        else:
-            if grow:
-                print len(self.body)
-                self.body.append(oldHead)
