@@ -1,5 +1,5 @@
 import pygame
-from . import snek, components
+import snek, components
 
 pygame.init()
 pygame.display.set_caption("No step on Snek")
@@ -18,15 +18,17 @@ class GameInstance():
     def loadSneks(self, num):
         a = True
         i = 0
-        sectionsX = round((self.window.width - 25 / num)/25.0) * 25.0
+        numx = num + 1
+        sectionsX = round(((self.window.width - 25) / numx)/25.0) * 25.0
         y = (self.window.height / 2) - 25
 
-        while (i < num):
-            i = i + 1
+        for s in range(num):
             x = sectionsX * i
-
-            sneks.append(snek.Snek(x, y, a))
+            print sectionsX
+            print x
+            self.sneks.append(snek.Snek(x, y, a))
             a = False
+            i = i + 1
 
     def loadFood(self, num):
         for i in range(num):
@@ -50,9 +52,6 @@ class GameInstance():
         game_over = self.font.render("Game Over", True, self.colors.black)
 
         while not states.exit:
-            for event in pygame.event.get():
-
-
             self.gameDisplay.fill(self.colors.red)
             self.gameDisplay.blit(self.game_over, [self.window["Width"] / 2, self.window["Height"] / 2])
             pygame.display.update()
@@ -61,23 +60,22 @@ class GameInstance():
         self.gameDisplay.fill(self.colors.white)
         i = 0
         for x in self.sneks:
-            x.update('n')
+            x.update('n', self.food)
 
         for x in self.food:
-            pygame.draw.rect(self.gameDisplay, x.color, x.x, x.y, x.square_size, x.square_size)
+            pygame.draw.rect(self.gameDisplay, x.color, [x.x, x.y, x.size, x.size])
 
         for i in self.sneks:
             for x in i.render():
                 # rect -> x, y, width, height
                 # pygame.draw.rect(self.gameDisplay, self.colors.red, [self.lead["x"], self.lead["y"], self.square_size, self.square_size])
-                pygame.draw.rect(self.gameDisplay, x.color, x.x, x.y, x.square_size, x.square_size)
+                pygame.draw.rect(self.gameDisplay, x.color, [x.x, x.y, x.square_size, x.square_size])
 
     def inGameLoop(self):
-        self.loadSneks(self.states.level)
-        self.loadFood(self.states.level)
+        self.loadSneks(self.states.level + 1)
+        self.loadFood(self.states.level + 1)
 
         while self.states.inGame:
-
             for event in pygame.event.get():
                 t = event.type
 
@@ -85,7 +83,7 @@ class GameInstance():
                     self.endGame()
 
                 elif t == pygame.KEYDOWN:
-                    k = event.key.name()
+                    k = event.key
 
                     if k == pygame.K_1:
                         self.activateSnek(1)
@@ -104,7 +102,7 @@ class GameInstance():
 
                     else:
                         self.sneks[self.states.activeSnek].eventHandler(event)
-                        
+
             self.gameRender()
             pygame.display.update()
             self.clock.tick(2)

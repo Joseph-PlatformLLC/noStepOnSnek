@@ -1,12 +1,12 @@
-from . import components
-
+import components
+import pygame
 class Snek():
     def __init__(self, x, y, active):
         self.colors = components.Colors()
         self.velocity = 25
         self.square_size = 25
         self.color = self.colors.black
-        self.speed = components.Dot(0,0)
+        self.speed = components.Dot(self.velocity, 0, self.color)
         self.head = components.Dot(x, y, self.color)
         self.body = []
         self.active = True
@@ -14,14 +14,15 @@ class Snek():
         self.window = components.Window()
         self.directionX = True
 
-    def update(self, code):
-        if code == 'l' or code == 'r':
-            self.head.x += self.speed.x
+    def update(self, code, food):
+        if code == 'n':
+            c = self.collisionCheck(food)
 
-        elif code =='u' or code == 'd':
-            self.head.y += self.speed.y
+            if c:
+                self.bodyFollow(self.head, True)
+            else:
+                self.bodyFollow(self.head)
 
-        elif code == 'n'
             if self.directionX:
                 self.head.x += self.speed.x
             else:
@@ -53,13 +54,57 @@ class Snek():
             self.speed.y = -self.velocity
             self.directionX = False
 
-    def grow(self, x, y):
-        body.append(components.Dot(x, y))
+    def grow(self):
+        x = self.body
+        if x:
+            dx = x[len(x) - 1].x
+            dy = x[len(x) - 1].y
+            self.body.append(components.Dot(dx, dy, self.color))
 
-    def render(self, display):
+    def render(self):
         r = [self.head]
-        for dot in self.body:
-            r.append((dot.x, dot.y))
+        if self.body:
+            for dot in self.body:
+                r.append(dot)
+
         return r
 
-    def collisionCheck(self)
+    def collisionCheck(self, food):
+        f = False
+        for x in food:
+            if (x.x == self.head.x) and (x.y == self.head.y):
+                self.grow()
+                f = True
+                break
+
+        return f
+
+    def bodyFollow(self, oldHead, grow=False):
+        flag = True
+        temp1 = None
+        temp2 = None
+
+        if self.body:
+            temp3 = self.body[len(self.body) - 1]
+            for d in self.body:
+
+                if flag:
+                    temp1 = d
+                    d.x = oldHead.x
+                    d.y = oldHead.y
+                    flag = False
+
+                else:
+                    temp1 = d
+                    d.x = temp2.x
+                    d.y = temp2.y
+
+                temp2 = temp1
+
+            if grow:
+                self.body[len(self.body)-1] = temp3
+
+        else:
+            if grow:
+                print len(self.body)
+                self.body.append(oldHead)

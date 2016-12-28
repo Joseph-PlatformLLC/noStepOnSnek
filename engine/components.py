@@ -1,4 +1,5 @@
 import random
+import snek
 
 class Dot():
     def __init__(self, x, y, color):
@@ -15,21 +16,21 @@ class Window():
 class Food():
     def __init__(self):
         window = Window()
-        snek = Snek()
+        snekx = snek.Snek(0,0,False)
         self.colors = Colors()
-        self.color = colors.red
-        self.size = snek.square_size
+        self.color = self.colors.red
+        self.size = snekx.square_size
         width = window.width - self.size
         height = window.height - self.size
-        dot = Dot(random.randrange(0, width, self.size), random.randrange(0, height, self.size))
+        dot = Dot(random.randrange(0, width, self.size), random.randrange(0, height, self.size), self.color)
         self.x = dot.x
         self.y = dot.y
         self.powerup = False
 
-    def collisionCheck(self, sneks):
-        for x in sneks:
-            for i in x:
-                
+    # def collisionCheck(self, sneks):
+    #     for x in sneks:
+    #         for i in x:
+
 
 
 class States():
