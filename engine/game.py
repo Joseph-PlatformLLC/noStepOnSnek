@@ -14,6 +14,7 @@ class GameInstance():
         self.sneks = []
         self.states = components.States()
         self.food = []
+        self.score = 0
 
     def loadSneks(self, num):
         a = True
@@ -53,14 +54,20 @@ class GameInstance():
 
         while not states.exit:
             self.gameDisplay.fill(self.colors.red)
-            self.gameDisplay.blit(self.game_over, [self.window["Width"] / 2, self.window["Height"] / 2])
+            self.gameDisplay.blit(game_over, [self.window["Width"] / 2, self.window["Height"] / 2])
             pygame.display.update()
 
     def gameRender(self):
+        score_display = self.font.render('Score: '+ str(self.score), True, self.colors.black)
         self.gameDisplay.fill(self.colors.white)
         i = 0
         for x in self.sneks:
-            x.update('n', self.food)
+            r = x.update('n', self.food)
+            print r
+            if r[0]:
+                self.food.pop(r[1])
+                self.loadFood(1)
+                self.score += 1
 
         for x in self.food:
             pygame.draw.rect(self.gameDisplay, x.color, [x.x, x.y, x.size, x.size])
@@ -70,6 +77,7 @@ class GameInstance():
                 # rect -> x, y, width, height
                 # pygame.draw.rect(self.gameDisplay, self.colors.red, [self.lead["x"], self.lead["y"], self.square_size, self.square_size])
                 pygame.draw.rect(self.gameDisplay, x.color, [x.x, x.y, x.square_size, x.square_size])
+        self.gameDisplay.blit(score_display, [self.window.width - 150, self.window.height - 50])
 
     def inGameLoop(self):
         self.loadSneks(self.states.level + 1)

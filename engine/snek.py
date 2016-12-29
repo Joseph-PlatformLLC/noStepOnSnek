@@ -1,5 +1,6 @@
 import components
 import pygame
+
 class Snek():
     def __init__(self, x, y, active):
         self.colors = components.Colors()
@@ -50,11 +51,13 @@ class Snek():
         return r
 
     def collisionCheck(self, food):
-        f = False
+        i = 0
+        f = (False, None)
         for x in food:
             if (x.x == self.head.x) and (x.y == self.head.y):
-                f = True
+                f = (True, i)
                 break
+            i += 1
 
         return f
 
@@ -76,7 +79,7 @@ class Snek():
         if code == 'n':
             c = self.collisionCheck(food)
 
-            if c:
+            if c[0]:
                 self.bodyFollow(self.head, True)
             else:
                 self.bodyFollow(self.head)
@@ -93,3 +96,5 @@ class Snek():
 
         if code == 'none':
             print('Unassigned Key')
+
+        return c
