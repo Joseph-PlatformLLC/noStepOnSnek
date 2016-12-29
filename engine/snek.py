@@ -33,15 +33,6 @@ class Snek():
             self.speed.y = -self.velocity
             self.directionX = False
 
-    # def grow(self):
-    #     x = self.body
-    #     if x:
-    #         dx = x[len(x) - 1].x
-    #         dy = x[len(x) - 1].y
-    #         self.body.append(components.Dot(dx, dy, self.color))
-    #     else:
-    #         self.body.append(components.Dot(self.head.x, self.head.y, self.color))
-
     def render(self):
         r = [self.head]
         if self.body:
@@ -63,13 +54,13 @@ class Snek():
 
     def bodyFollow(self, oldHead, grow=False):
         flag = True
-        for dot in self.body:
-            print dot.x, dot.y, dot.color
+        # for dot in self.body:
+        #    print dot.x, dot.y, dot.color
         if self.body:
             self.body.insert(0, components.Dot(oldHead.x, oldHead.y, oldHead.color))
             if not grow:
                 x = self.body.pop()
-                print x
+                # print x
 
         else:
             if grow:

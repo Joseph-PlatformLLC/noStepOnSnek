@@ -2,11 +2,16 @@ import random
 import snek
 
 class Dot():
-    def __init__(self, x, y, color):
-        self.x = x
-        self.y = y
-        self.color = color
+    def __init__(self, x, y, color, rand=False):
+        window = Window()
         self.square_size = 25
+        if rand:
+            self.x = random.randrange(0, window.width, self.square_size)
+            self.y = random.randrange(0, window.height, self.square_size)
+        else:
+            self.x = x
+            self.y = y
+        self.color = color
 
 class Window():
     def __init__(self):
@@ -27,12 +32,6 @@ class Food():
         self.y = dot.y
         self.powerup = False
 
-    # def collisionCheck(self, sneks):
-    #     for x in sneks:
-    #         for i in x:
-
-
-
 class States():
     def __init__(self):
         self.startScreen = True
@@ -41,6 +40,7 @@ class States():
         self.exit = False
         self.level = 1
         self.activeSnek = 0
+        self.nextLevel = 5
 
 class Colors():
     def __init__(self):
