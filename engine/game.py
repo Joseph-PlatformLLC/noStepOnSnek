@@ -16,6 +16,33 @@ class GameInstance():
         self.food = []
         self.score = 0
 
+    def renderText(self, text, color):
+        x = self.font.render(text, True, color)
+        y = x.get_rect()
+        return x, y
+
+    def renderOverlay(self):
+        score_surface, score_rect = self.renderText('Score: '+ str(self.score), self.colors.grey)
+        sr_width, sr_height = self.font.size('Score: '+str(self.score))
+        level_surface, level_rect = self.renderText('Level: '+ str(self.states.level), self.colors.grey)
+        ls_width, ls_height = self.font.size('Level: '+str(self.states.level))
+        offset = 15
+        score_rect.center = ((sr_width / 2) + offset, self.window.height + (-sr_height /2) - offset)
+        level_rect.center = ((self.window.width + (-ls_width / 2) - offset), (self.window.height + ((-ls_height / 2) - offset)))
+
+        for i in range(0, len(self.sneks)):
+            if self.sneks[i].active:
+                color = self.colors.black
+            else:
+                color = self.colors.grey
+
+            snek_display = self.font.render(str(i + 1), True, color)
+            self.gameDisplay.blit(snek_display, [xoffset, 10])
+            xoffset += 30
+
+        self.gameDisplay.blit(score_surface, score_rect)
+        self.gameDisplay.blit(level_surface, level_rect)
+
     def loadSneks(self, num, first=False):
         a = first
         i = 0
@@ -59,24 +86,6 @@ class GameInstance():
             self.gameDisplay.blit(game_over, [self.window["Width"] / 2, self.window["Height"] / 2])
             pygame.display.update()
 
-    def renderOverlay(self):
-        score_display = self.font.render('Score: '+ str(self.score), True, self.colors.grey)
-        level_display = self.font.render('Level: '+ str(self.states.level), True, self.colors.grey)
-
-        xoffset = 15
-        for i in range(0, len(self.sneks)):
-            if self.sneks[i].active:
-                color = self.colors.black
-            else:
-                color = self.colors.grey
-
-            snek_display = self.font.render(str(i + 1), True, color)
-            self.gameDisplay.blit(snek_display, [xoffset, 10])
-            xoffset += 30
-
-        self.gameDisplay.blit(level_display, [15, self.window.height - 50])
-        self.gameDisplay.blit(score_display, [self.window.width - 250, self.window.height - 50])
-
     def drawFrame(self):
         i = 0
         self.gameDisplay.fill(self.colors.white)
@@ -105,8 +114,7 @@ class GameInstance():
 
         if self.score > self.states.nextLevel:
             self.states.level += 1
-            self.states.nextLevel += 25
-            print self.states.nextLevel
+            self.states.nextLevel += 55
             self.loadSneks(1)
 
     def eventHandler(self, event):
